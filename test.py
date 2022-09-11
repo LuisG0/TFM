@@ -20,21 +20,20 @@ base_url = r"https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS
 wind_power_speed = pd.read_csv("wind_power_speed.csv",names=["date","power"],parse_dates=['date'])
 print(wind_power_speed)
 
-for latitude, longitude,name in locations[:60]:
-        locations.remove((latitude, longitude,name))
+data = {}
+
+for latitude, longitude,name in locations:
+        #locations.remove((latitude, longitude,name))
         print(latitude, longitude,name)
 
         api_request_url = base_url.format(longitude=longitude, latitude=latitude)
-        data = {}
         response = requests.get(url=api_request_url, verify=True, timeout=30.00)
 
-
         content = json.loads(response.content.decode('utf-8'))['properties']['parameter']['WS50M']
-        df = pd.json_normalize(content).T
-        df = df.reset_index(level=0)
-        df.columns = ["date",name]
-        df["date"] = pd.to_datetime(df['date'],format="%Y%m%d%H")
-        print(df)
-        wind_power_speed = wind_power_speed.join(df.set_index('date'),on='date')
-        print(wind_power_speed.head(30))
-        break
+        data[name] = list(content.values())
+
+values = pd.DataFrame.from_dict(data)
+values["date"] = pd.to_datetime(list(content.keys()),format="%Y%m%d%H")
+wind_power_speed = wind_power_speed.join(values.set_index('date'),on='date')
+print(wind_power_speed.head(30))
+wind_power_speed.to_csv("result.csv")
