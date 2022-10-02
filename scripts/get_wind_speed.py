@@ -21,7 +21,7 @@ wind_power_speed = pd.read_csv("wind_power_5y_processed.csv",parse_dates=['datet
 print(wind_power_speed)
 
 import numpy as np
-slices = 8
+slices = 120
 locations_slices = np.array_split(locations, slices)
 
 def get_wind_speed_for_locations(locations,index,wind_power_speed):
@@ -30,7 +30,7 @@ def get_wind_speed_for_locations(locations,index,wind_power_speed):
         print(latitude, longitude,name)
 
         api_request_url = base_url.format(longitude=longitude, latitude=latitude)
-        response = requests.get(url=api_request_url, verify=True)
+        response = requests.get(url=api_request_url, verify=True,timeout=30)
 
         content = json.loads(response.content.decode('utf-8'))['properties']['parameter']['WS50M']
         data[name] = list(content.values())

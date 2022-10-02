@@ -7,3 +7,5 @@ export_GeneraciónT.RealEólica_2022-09-19_20 43 copy 2.csv
 wind_power_5y_processed.csv
 result1.csv
 result0.csv
+data/hourly_data.csv
+data/raw_data.csv
