@@ -4,7 +4,7 @@ from datetime import datetime
 
 locations = []
 
-with open("wind_farms_data.csv", 'r', newline='', encoding='UTF-8') as f:
+with open("../data/wind_farms_data.csv", 'r', newline='', encoding='UTF-8') as f:
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
     line_count = 0
     for row in csv_reader:
@@ -17,7 +17,7 @@ locations = list(dict.fromkeys(locations))
 
 base_url = r"https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS50M&community=SB&longitude={longitude}&latitude={latitude}&start=20160901&end=20220901&format=json"
 
-wind_power_speed = pd.read_csv("wind_power_5y_processed.csv",parse_dates=['datetime'])
+wind_power_speed = pd.read_csv("../data/wind_power_5y_processed.csv",parse_dates=['datetime'])
 print(wind_power_speed)
 
 import numpy as np
@@ -40,7 +40,7 @@ def get_wind_speed_for_locations(locations,index,wind_power_speed):
     values["datetime"] = pd.to_datetime(list(content.keys()),format="%Y%m%d%H")
     wind_power_speed = wind_power_speed.join(values.set_index('datetime'),on='datetime')
     print(wind_power_speed.head(15))
-    wind_power_speed.to_csv("result" + str(index) + ".csv",index=False)
+    wind_power_speed.to_csv("../data/result" + str(index) + ".csv",index=False)
 
 for i in range(slices):
     data = {}
